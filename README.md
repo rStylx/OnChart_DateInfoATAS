@@ -1,12 +1,12 @@
 # US Holidays — ATAS indicator
 
 Marks US market holidays directly on the chart so historical futures sessions can be
-identified at a glance. Built for research on historical data, not for live signals.
+identified at a glance. Built for research on historical data, not for live.
 
 Every holiday day is drawn as a coloured vertical band spanning the full height of the
-price panel, with a label naming the day and its market status.
+price panel with a label naming the day and its market status:
 
-## What gets marked
+## What?:
 
 | Category | Meaning | Default |
 |---|---|---|
@@ -22,38 +22,8 @@ normally. A plain federal-holiday list gets both of these wrong.
 Unscheduled closures currently covered: 11–14 Sep 2001, 11 Jun 2004 (Reagan),
 2 Jan 2007 (Ford), 29–30 Oct 2012 (Sandy), 5 Dec 2018 (Bush), 9 Jan 2025 (Carter).
 
-## Where the data comes from
-
-Two layers, so the chart is never blank and never wrong:
-
-1. **Built-in rules** — the NYSE/CME calendar is computed locally for any year
-   (including Good Friday via the Gregorian Easter algorithm and the Saturday/Sunday
-   observance rules). This resolves instantly and works with no network.
-2. **nager.date API** — federal holidays are downloaded in the background from
-   `https://date.nager.at/api/v3/PublicHolidays/{year}/US` and merged in as a
-   cross-check. Responses are cached under
-   `%LOCALAPPDATA%\ATAS\UsHolidays\{year}.json`; past years are kept indefinitely,
-   the current year is refreshed weekly.
-
-The built-in rules always win on market status — the API only adds federal days the
-rules do not already cover. If there is no network the download fails silently and the
-computed calendar is used. It can be switched off entirely with **Download from
-nager.date**.
-
-Observance edge cases that are handled: New Year's Day rolls forward from Sunday only
-(markets trade the Friday when 1 January falls on a Saturday), a holiday falling on
-Saturday is observed the preceding Friday, and no early close is drawn on a day that is
-already a full closure.
 
 ## Settings
-
-| Group | Setting | Notes |
-|---|---|---|
-| Data | Download from nager.date | Turn off for a fully offline calendar |
-| Data | Session shift (hours) | Bar time is shifted by this before mapping to a calendar day. Use `6` when the CME session opens 18:00 ET so the evening bars belong to the next trading day. Default `0` = plain calendar date |
-| Full closure / Early close / Unscheduled / Federal only | Show, Color | Per-category visibility and colour |
-| Label | Show labels, Append status, Color, Font size, Placement | Labels stack into up to four rows to avoid overlap on daily charts |
-| Border | Show borders, Color | Vertical lines at both edges of the band |
 
 The indicator also exposes a hidden `Holiday` data series: `0` = normal day, `1` =
 federal only, `2` = early close, `3` = unscheduled, `4` = full closure. Switch its
@@ -61,28 +31,4 @@ visual type away from *Hide* to plot it, or read it from another indicator.
 
 ## Build and install
 
-Requires the .NET 10 SDK and a local ATAS installation (referenced assemblies are not
-redistributed).
-
-```powershell
-.\deploy.ps1
-```
-
-This builds the project and copies `UsHolidays.dll` into `%APPDATA%\ATAS\Indicators`.
-**Close ATAS first** — it locks loaded indicator assemblies. Restart it and add
-*US Holidays* from the indicator list.
-
-If ATAS is installed elsewhere:
-
-```powershell
-.\deploy.ps1 -AtasPath "D:\ATAS Platform"
-```
-
-## Notes
-
-- The indicator draws behind the candles on the price panel; it does not use its own panel.
-- Rules are modelled from 1971 onward (the Uniform Monday Holiday Act). MLK Day is
-  included from 1998 and Juneteenth from 2022, matching when the exchanges actually
-  started observing them.
-- Good Friday closes equities and equity-index futures; some CME rates products keep a
-  shortened session that day.
+Requires the .NET 10 SDK and ATAS. Then just put Indicator in APPDATA where Indicators are.
