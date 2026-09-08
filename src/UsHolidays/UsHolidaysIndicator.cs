@@ -223,7 +223,12 @@ namespace UsHolidays
 		{
 			var text = ShowKindTag ? info.Name + " (" + info.KindTag + ")" : info.Name;
 			var size = context.MeasureString(text, _font);
-			var x = band.Left + (band.Width - size.Width) / 2;
+
+			// na intradayu jeden dzien potrafi zajac caly ekran, wiec centrujemy po widocznym
+			// kawalku pasa a nie po calym, inaczej podpis ucieka za krawedz
+			var visibleLeft = Math.Max(band.Left, region.Left);
+			var visibleRight = Math.Min(band.Right, region.Right);
+			var x = visibleLeft + (visibleRight - visibleLeft - size.Width) / 2;
 
 			// na dziennym interwale jeden dzien to jeden slupek, wiec podpisy wchodza na siebie.
 			// szukamy pierwszego wolnego wiersza, a jak nie ma to kurwa trudno, nie rysujemy
